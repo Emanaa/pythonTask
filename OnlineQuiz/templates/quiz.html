@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load staticfiles %}
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+    <style>
+        #num-question-btn{
+            margin-top:10px;
+        }
+        a,a:hover{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav style="background-color: #2e6da4;width:100%;color:white">
+    <div class="row">
+    <span class="logo navbar-brand pull-left">
+       Test your Intelligence
+    </span>
+            <span class="col-sm-offset-4">
+                <span class="glyphicon glyphicon-user"></span>
+                <span>{{ request.user.username }}</span>
+                <a href="/quiz/logout/" id="log-out" style="text-decoration: none;color:white">log out</a>
+            </span>
+            <span class="col-sm-4"></span>
+    </div>
+</nav>
+    <div id="quiz_list" class="text-center center-block">
+        <span class="row"></span>
+        
+    </div>
+ 
+    <div class="row" id="question-display" style="display:none">
+        <span class="row"></span>
+			<div class="panel panel-default col-sm-8 col-sm-offset-2">
+				<div class="panel-heading h2 question-place">
+
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+						<a href="#" class="select-option"><li class="list-group-item h3"><span class="glyphicon glyphicon-unchecked col-sm-offset-1"></span><span class="col-sm-offset-2 option option1-place"></span></li></a>
+						<a href="#" class="select-option"><li class="list-group-item h3"><span class="glyphicon glyphicon-unchecked col-sm-offset-1"></span><span class="col-sm-offset-2 option option2-place"></span></li></a>
+						<a href="#" class="select-option"><li class="list-group-item h3"><span class="glyphicon glyphicon-unchecked col-sm-offset-1"></span><span class="col-sm-offset-2 option option3-place"></span></li></a>
+						<a href="#" class="select-option"><li class="list-group-item h3"><span class="glyphicon glyphicon-unchecked col-sm-offset-1"></span><span class="col-sm-offset-2 option option4-place"></span></li></a>
+                        <input type="hidden" id="option-answer" value="" />
+					</ul>
+					<button class="btn btn-default" id="verify"><span class="before">Verify</span></span><span style="display:none" class="glyphicon glyphicon-ok-circle after-ok"></span><span style="display:none" class="glyphicon glyphicon-remove after-not-ok"></span></button>
+					<button class="btn btn-default pull-right" id="after"><span class="before">Skip</span><span style="display:none" class="glyphicon glyphicon-forward after"></span></button>
+				</div>
+			</div>
+		</div>
+        <div style="display:none" class="jumbotron text-center" id="score">
+            <p>Your Score is <span id="count"></span> out of <span id="total"></span></p>
+            <button class="btn btn-default exit-btn">exit</button>
+        </div>
+    <div id="no-questions" class="jumbotron text-center" style="display:none">
+        <p>Sorry! currently there are no questions in this quiz</p>
+        <button class="btn btn-default exit-btn">exit</button>
+    </div>
+    <script src="{% static 'js/jquery.min.js'%}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/validate.js' %}"></script>
+    <script>
+        function template(id,name)
+        {
+            return "<div class='row quiz-panel'>"+
+                    "<a href='#'><div class='panel panel-default col-sm-4 col-sm-offset-4'>"+
+                    "<div class='quiz_template panel-body' id="+id+">"+
+                    name+
+                    "</div></div></a></div>";
+        }
+        $.get("/quiz/api/quiz/",function(data,status){
+            for(i=0;i<data.length;i++)
+            {
+                //alert(i);
+                $("#quiz_list").append(template(data[i].id,data[i].name));
+            }
+        });
+    </script>
+</body>
+</html>
